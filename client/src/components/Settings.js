@@ -1,11 +1,13 @@
 import {
   AppBar,
+  Box,
   Button,
   Dialog,
   Divider,
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   makeStyles,
   Slide,
@@ -13,6 +15,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import EditIcon from "@material-ui/icons/Edit";
+import KeyIcon from "@material-ui/icons/VpnKey";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+
 import { forwardRef, useState } from "react";
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -30,7 +38,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const Settings = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -62,22 +70,105 @@ const Settings = () => {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Sound
+              Group Settings
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               save
             </Button>
           </Toolbar>
         </AppBar>
+        <Box mt={3} ml={2}>
+          <Typography variant="body2">Admin Controls</Typography>
+        </Box>
         <List>
           <ListItem button>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary="Edit Name" secondary="Edit group name" />
           </ListItem>
-          <Divider />
           <ListItem button>
+            <ListItemIcon>
+              <KeyIcon />
+            </ListItemIcon>
             <ListItemText
-              primary="Default notification ringtone"
-              secondary="Tethys"
+              primary="Change Code"
+              secondary="Change invite code of group"
+            />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <SupervisorAccountIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Assign Admin"
+              secondary="Assign admin status to members"
+            />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <RemoveCircleIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Remove Member"
+              secondary="Remove members from the group"
+            />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <DeleteForeverIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Delete Group"
+              secondary="Delete the group. This can't be undone"
+            />
+          </ListItem>
+        </List>
+        <Divider />
+        <Box mt={3} ml={2}>
+          <Typography variant="body2">General</Typography>
+        </Box>
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary="List Members" secondary="List all the mmembers in the group" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <KeyIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Share"
+              secondary="Share the group with your contacts"
+            />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <SupervisorAccountIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Copy Invite Code"
+              secondary="Copy invite code to clipboard"
+            />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <RemoveCircleIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Exit Group"
+              secondary="Leave the group"
+            />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <DeleteForeverIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary="Report Group"
+              secondary="Report this group to the developer"
             />
           </ListItem>
         </List>

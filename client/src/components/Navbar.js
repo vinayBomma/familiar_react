@@ -97,7 +97,7 @@ const Navbar = ({ children }) => {
   };
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" style={{backgroundColor: "#272727"}}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -109,7 +109,7 @@ const Navbar = ({ children }) => {
           </IconButton>
           <Typography variant="h6">{location.pathname}</Typography>
           {location.pathname === '/' ? (
-          <Button style={{ color: "cyan" }}>Join Group</Button>) : null}
+          <Button color="inherit">Join Group</Button>) : null}
         </Toolbar>
       </AppBar>
       <Drawer
