@@ -9,43 +9,40 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  useTheme,
   makeStyles,
   ListItem,
+  SvgIcon,
+  Avatar,
+  Box,
 } from "@material-ui/core";
 
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import {
+  MenuIcon,
+  ChevronLeftIcon,
+  UserGroupIcon,
+  InformationCircleIcon,
+  ChatIcon,
+  CogIcon,
+  MapIcon,
+} from "@heroicons/react/outline";
 
 const drawerWidth = 240;
 
+const navLinks = [
+  { name: "Groups", path: "/", icon: UserGroupIcon },
+  { name: "About", path: "/about", icon: InformationCircleIcon },
+  { name: "Chats", path: "/chats", icon: ChatIcon },
+  { name: "Settings", path: "/settings", icon: CogIcon },
+  { name: "Map", path: "/map", icon: MapIcon },
+];
+
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: "none",
+  avatar: {
+    width: theme.spacing(13),
+    height: theme.spacing(13),
+    alignSelf: "center",
   },
   toolbar: theme.mixins.toolbar,
   drawer: {
@@ -63,21 +60,12 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
+  pageName: {
+    marginLeft: theme.spacing(3),
   },
-  contentShift: {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
+  rightToolbar: {
+    marginLeft: "auto",
+    marginRight: 2,
   },
 }));
 
@@ -85,7 +73,6 @@ const Navbar = ({ children }) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -96,8 +83,8 @@ const Navbar = ({ children }) => {
     setOpen(false);
   };
   return (
-    <>
-      <AppBar position="fixed" style={{backgroundColor: "#272727"}}>
+    <div>
+      <AppBar position="fixed" style={{ backgroundColor: "#272727" }}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -105,11 +92,29 @@ const Navbar = ({ children }) => {
             aria-label="menu"
             onClick={handleDrawerOpen}
           >
-            <MenuIcon />
+            <SvgIcon>
+              <MenuIcon />
+            </SvgIcon>
           </IconButton>
-          <Typography variant="h6">{location.pathname}</Typography>
-          {location.pathname === '/' ? (
-          <Button color="inherit">Join Group</Button>) : null}
+
+          <Typography variant="h6">
+            {location.pathname === "/" ? "Groups" : "Chats"}
+          </Typography>
+
+          <section className={classes.rightToolbar}>
+            {location.pathname === "/" ? (
+              <Button
+                startIcon={
+                  <SvgIcon>
+                    <UserGroupIcon />
+                  </SvgIcon>
+                }
+                style={{ color: "teal" }}
+              >
+                Join Group
+              </Button>
+            ) : null}
+          </section>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -123,17 +128,34 @@ const Navbar = ({ children }) => {
       >
         <div className={classes.drawerHeader}>
           <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
+            <SvgIcon>
+              <ChevronLeftIcon />
+            </SvgIcon>
           </IconButton>
         </div>
-        <Divider />
+
+        <Avatar
+          className={classes.avatar}
+          src="https://lh3.googleusercontent.com/a-/AOh14GgSL9H-4yXSZcWrfQ3XKMBQZaqN70s6PR0mhkW8Zw=s96-c"
+          alt="Paella dish"
+        />
+        <Box mt={3}>
+          <Divider />
+        </Box>
+
         <List>
-          {["Inbox", "Settings", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text} onClick={() => history.push(text)}>
+          {navLinks.map((link) => (
+            <ListItem
+              button
+              key={link.name}
+              onClick={() => history.push(link.path)}
+            >
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <SvgIcon>
+                  <link.icon />
+                </SvgIcon>
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={link.name} />
             </ListItem>
           ))}
         </List>
@@ -142,7 +164,7 @@ const Navbar = ({ children }) => {
         <div className={classes.toolbar}></div>
         {children}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -13,18 +13,27 @@ import {
   Slide,
   Toolbar,
   Typography,
+  SvgIcon,
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import EditIcon from "@material-ui/icons/Edit";
-import KeyIcon from "@material-ui/icons/VpnKey";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {
+  ExclamationCircleIcon,
+  KeyIcon,
+  LogoutIcon,
+  PencilIcon,
+  ShareIcon,
+  TrashIcon,
+  UserGroupIcon,
+  UserRemoveIcon,
+  UsersIcon,
+  XIcon,
+  DuplicateIcon,
+} from "@heroicons/react/outline";
 
 import { forwardRef, useState } from "react";
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
+    backgroundColor: "teal"
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -38,7 +47,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const Settings = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -67,14 +76,13 @@ const Settings = () => {
               onClick={handleClose}
               aria-label="close"
             >
-              <CloseIcon />
+              <SvgIcon>
+                <XIcon />
+              </SvgIcon>
             </IconButton>
             <Typography variant="h6" className={classes.title}>
               Group Settings
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
           </Toolbar>
         </AppBar>
         <Box mt={3} ml={2}>
@@ -83,13 +91,17 @@ const Settings = () => {
         <List>
           <ListItem button>
             <ListItemIcon>
-              <EditIcon />
+              <SvgIcon>
+                <PencilIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText primary="Edit Name" secondary="Edit group name" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <KeyIcon />
+              <SvgIcon>
+                <KeyIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Change Code"
@@ -98,7 +110,9 @@ const Settings = () => {
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <SupervisorAccountIcon />
+              <SvgIcon>
+                <UsersIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Assign Admin"
@@ -107,7 +121,9 @@ const Settings = () => {
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <RemoveCircleIcon />
+              <SvgIcon>
+                <UserRemoveIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Remove Member"
@@ -116,7 +132,9 @@ const Settings = () => {
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <DeleteForeverIcon />
+              <SvgIcon>
+                <TrashIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Delete Group"
@@ -131,13 +149,20 @@ const Settings = () => {
         <List>
           <ListItem button>
             <ListItemIcon>
-              <EditIcon />
+              <SvgIcon>
+                <UserGroupIcon />
+              </SvgIcon>
             </ListItemIcon>
-            <ListItemText primary="List Members" secondary="List all the mmembers in the group" />
+            <ListItemText
+              primary="List Members"
+              secondary="List all the mmembers in the group"
+            />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <KeyIcon />
+              <SvgIcon>
+                <ShareIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Share"
@@ -146,7 +171,9 @@ const Settings = () => {
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <SupervisorAccountIcon />
+              <SvgIcon>
+                <DuplicateIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Copy Invite Code"
@@ -155,16 +182,17 @@ const Settings = () => {
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <RemoveCircleIcon />
+              <SvgIcon>
+                <LogoutIcon />
+              </SvgIcon>
             </ListItemIcon>
-            <ListItemText
-              primary="Exit Group"
-              secondary="Leave the group"
-            />
+            <ListItemText primary="Exit Group" secondary="Leave the group" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
-              <DeleteForeverIcon />
+              <SvgIcon>
+                <ExclamationCircleIcon />
+              </SvgIcon>
             </ListItemIcon>
             <ListItemText
               primary="Report Group"

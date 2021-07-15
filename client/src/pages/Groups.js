@@ -11,10 +11,23 @@ import {
   Box,
   Fab,
   makeStyles,
+  SvgIcon,
+  ListItemIcon,
 } from "@material-ui/core";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import AddIcon from "@material-ui/icons/Add";
 import { useState } from "react";
+import {
+  ChatIcon,
+  CogIcon,
+  MapIcon,
+  DotsHorizontalIcon,
+  PlusIcon,
+} from "@heroicons/react/outline";
+
+const menuItems = [
+  { name: "Map", icon: MapIcon },
+  { name: "Chat", icon: ChatIcon },
+  { name: "Settings", icon: CogIcon },
+];
 
 const useStyles = makeStyles((theme) => ({
   cardColor: {
@@ -26,12 +39,9 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     bottom: theme.spacing(4),
     right: theme.spacing(4),
-    // backgroundColor: "cyan",
+    backgroundColor: "teal",
+    color: "white",
   },
-  //   toolbar: theme.mixins.toolbar
-  //   cardText: {
-  //       color: ,
-  //   }
 }));
 
 const Groups = () => {
@@ -50,7 +60,7 @@ const Groups = () => {
   return (
     <Container>
       <Grid container className={classes.toolbar}>
-        <Grid item md={6} xs={12} lg={4}>
+        <Grid item md={4} xs={12} lg={4} sm={6}>
           <Box mt={3}>
             <Card className={classes.cardColor}>
               <CardHeader
@@ -59,7 +69,9 @@ const Groups = () => {
                 title="Dunder Mifflin"
                 action={
                   <IconButton onClick={handleClick}>
-                    <MoreHorizIcon style={{ color: "white" }} />
+                    <SvgIcon>
+                      <DotsHorizontalIcon />
+                    </SvgIcon>
                   </IconButton>
                 }
               ></CardHeader>
@@ -70,9 +82,16 @@ const Groups = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Map</MenuItem>
-                <MenuItem onClick={handleClose}>Chat</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                {menuItems.map((item) => (
+                  <MenuItem button key={item.name} onClick={handleClose}>
+                    <ListItemIcon>
+                      <SvgIcon>
+                        <item.icon />
+                      </SvgIcon>
+                    </ListItemIcon>
+                    {item.name}
+                  </MenuItem>
+                ))}
               </Menu>
               <CardContent style={{ textAlign: "left" }}>
                 <Typography variant="subtitle2">4 Members</Typography>
@@ -81,8 +100,10 @@ const Groups = () => {
           </Box>
         </Grid>
       </Grid>
-      <Fab style={{ backgroundColor: "cyan" }} className={classes.fab} aria-label="add">
-        <AddIcon />
+      <Fab className={classes.fab} aria-label="add">
+        <SvgIcon>
+          <PlusIcon />
+        </SvgIcon>
       </Fab>
     </Container>
   );
