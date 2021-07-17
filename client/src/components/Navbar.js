@@ -82,22 +82,18 @@ const Navbar = ({ children }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+   
   return (
     <div>
       <AppBar position="fixed" style={{ backgroundColor: "#272727" }}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleDrawerOpen}
-          >
+          <IconButton edge="start" aria-label="menu" onClick={handleDrawerOpen}>
             <SvgIcon>
               <MenuIcon />
             </SvgIcon>
           </IconButton>
 
-          <Typography variant="h6">
+          <Typography variant="h6" className={classes.pageName}>
             {location.pathname === "/" ? "Groups" : "Chats"}
           </Typography>
 
@@ -158,6 +154,9 @@ const Navbar = ({ children }) => {
               <ListItemText primary={link.name} />
             </ListItem>
           ))}
+          <Box mt={2} mb={2}>
+            <Divider />
+          </Box>
         </List>
       </Drawer>
       <div>
