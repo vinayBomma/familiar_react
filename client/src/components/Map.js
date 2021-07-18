@@ -1,5 +1,4 @@
-import { XIcon } from "@heroicons/react/outline";
-import { AppBar, IconButton, SvgIcon, Toolbar, Typography } from "@material-ui/core";
+
 
 const Map = () => {
   return (

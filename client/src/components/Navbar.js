@@ -14,6 +14,11 @@ import {
   SvgIcon,
   Avatar,
   Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@material-ui/core";
 
 import { useState } from "react";
@@ -74,6 +79,7 @@ const Navbar = ({ children }) => {
   const history = useHistory();
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [dialog, setDialogOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -82,7 +88,11 @@ const Navbar = ({ children }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-   
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
   return (
     <div>
       <AppBar position="fixed" style={{ backgroundColor: "#272727" }}>
@@ -100,12 +110,13 @@ const Navbar = ({ children }) => {
           <section className={classes.rightToolbar}>
             {location.pathname === "/" ? (
               <Button
+                onClick={() => setDialogOpen(true)}
                 startIcon={
                   <SvgIcon>
                     <UserGroupIcon />
                   </SvgIcon>
                 }
-                style={{ color: "teal" }}
+                color="primary"
               >
                 Join Group
               </Button>
@@ -163,6 +174,33 @@ const Navbar = ({ children }) => {
         <div className={classes.toolbar}></div>
         {children}
       </div>
+
+      {/* ================= Join Group ================== */}
+
+      <Dialog open={dialog} onClose={handleDialogClose} fullWidth>
+        <DialogTitle style={{ textAlign: "center" }} id="alert-dialog-title">
+          {"Join Group"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            placeholder="Enter 6 digit code"
+            variant="outlined"
+            style={{ width: "100%" }}
+          />
+        </DialogContent>
+        <Box mt={3}>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>Cancel</Button>
+            <Button
+              onClick={handleDialogClose}
+              color="primary"
+              variant="contained"
+            >
+              Join
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </div>
   );
 };

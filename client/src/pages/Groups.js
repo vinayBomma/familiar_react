@@ -17,6 +17,15 @@ import {
   Dialog,
   Toolbar,
   Slide,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
 } from "@material-ui/core";
 import { forwardRef, useState } from "react";
 import {
@@ -26,6 +35,7 @@ import {
   DotsHorizontalIcon,
   PlusIcon,
   XIcon,
+  DuplicateIcon,
 } from "@heroicons/react/outline";
 
 import Settings from "../components/Settings";
@@ -48,12 +58,10 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     bottom: theme.spacing(4),
     right: theme.spacing(4),
-    backgroundColor: "teal",
-    color: "white",
   },
   appBar: {
     position: "relative",
-    backgroundColor: "teal",
+    color: "primary",
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -73,6 +81,8 @@ const Groups = () => {
   const [openMap, setMap] = useState(false);
   const [openChat, setChat] = useState(false);
   const [option, setOption] = useState(null);
+  const [dialog, setDialogOpen] = useState(false);
+  const [inviteCode, setInviteCode] = useState('')
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -87,7 +97,6 @@ const Groups = () => {
       setMap(true);
       setOption("Map");
     } else if (val === "Chat") {
-      console.log('triggered')
       setChat(true);
       setOption("Chat");
     }
@@ -101,6 +110,30 @@ const Groups = () => {
     } else if (option === "Chat") {
       setChat(false);
     }
+  };
+
+  const genCode = () => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    setInviteCode(result);
+    // this.inviteCodeSetting = result;
+  };
+
+  const copyCode = () => {
+    if (inviteCode) {
+      navigator.clipboard.writeText(inviteCode);
+      // this.msg = "Invite code copied to clipboard";
+      // this.snackbar = true;
+    }
+  }
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
   };
 
   return (
@@ -151,7 +184,12 @@ const Groups = () => {
             </Box>
           </Grid>
         </Grid>
-        <Fab className={classes.fab} aria-label="add">
+        <Fab
+          className={classes.fab}
+          aria-label="add"
+          color="primary"
+          onClick={() => setDialogOpen(true)}
+        >
           <SvgIcon>
             <PlusIcon />
           </SvgIcon>
@@ -169,7 +207,6 @@ const Groups = () => {
           <Toolbar>
             <IconButton
               edge="start"
-              color="inherit"
               onClick={handleOptionClose}
               aria-label="close"
             >
@@ -184,8 +221,61 @@ const Groups = () => {
         </AppBar>
 
         {openSetting && <Settings />}
-        {openMap && <Map /> }
+        {openMap && <Map />}
         {openChat && <Chats />}
+      </Dialog>
+
+      <Dialog open={dialog} onClose={handleDialogClose} fullWidth>
+        <DialogTitle style={{ textAlign: "center" }} id="alert-dialog-title">
+          {"Create Group"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Group Name"
+            variant="outlined"
+            style={{ width: "100%" }}
+          />
+          <Box display="flex" mt={2}>
+            <FormControl variant="outlined" style={{ width: "100%" }}>
+              <InputLabel>Invite Code</InputLabel>
+              <OutlinedInput readOnly
+                // type={values.showPassword ? 'text' : 'password'}
+                value={inviteCode}
+                // onChange={handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton onClick={copyCode}
+                      edge="end"
+                    >
+                      <SvgIcon>
+                        <DuplicateIcon />
+                      </SvgIcon>
+                      {/* {values.showPassword ? <Visibility />s : <VisibilityOff />} */}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                // labelWidth={70}
+              />
+            </FormControl>
+            <Box ml={1} mr={-2} alignSelf="center">
+              <Button onClick={genCode} style={{ color: "#4DB6AC" }}>
+                Generate
+              </Button>
+            </Box>
+          </Box>
+        </DialogContent>
+        <Box mt={3}>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>Cancel</Button>
+            <Button
+              onClick={handleDialogClose}
+              color="primary"
+              variant="contained"
+            >
+              Create
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
     </>
   );
