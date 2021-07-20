@@ -73,6 +73,56 @@ const Chats = () => {
         </Grid>
       </Box>
 
+      <Box display="flex" flexDirection="row" style={{ width: "100%" }}>
+        <Grid item container md={6} xs={8} lg={6} sm={6}>
+          <Box ml={1} mt={2} style={{ marginRight: "auto" }}>
+            <Card style={{ minWidth: "150px", backgroundColor: "#3949AB" }}>
+              <CardContent>
+                <Typography variant="caption">Mike</Typography>
+                <span style={{ float: "right" }}>
+                  <Typography variant="caption">9:22 pm</Typography>
+                </span>
+                <Box mt={1} mb={-1}>
+                  <Typography variant="body2">
+                    What happens when I enter a super long message? Like for
+                    example, say I want to tell a story. The story goes like
+                    this: A man comes across a ring, no ordinary ring that which
+                    he is oblivious about. A ring to rule the entire world! But
+                    instead of wearing the said ring and conquering the whole
+                    world, the madlad pisses on it! Hello Everyone!
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        </Grid>
+      </Box>
+
+      <Box display="flex" flexDirection="row" style={{ width: "100%" }}>
+        <Grid item container md={6} xs={8} lg={6} sm={6}>
+          <Box ml={1} mt={2} style={{ marginRight: "auto" }}>
+            <Card style={{ minWidth: "150px", backgroundColor: "#3949AB" }}>
+              <CardContent>
+                <Typography variant="caption">Mike</Typography>
+                <span style={{ float: "right" }}>
+                  <Typography variant="caption">9:22 pm</Typography>
+                </span>
+                <Box mt={1} mb={-1}>
+                  <Typography variant="body2">
+                    What happens when I enter a super long message? Like for
+                    example, say I want to tell a story. The story goes like
+                    this: A man comes across a ring, no ordinary ring that which
+                    he is oblivious about. A ring to rule the entire world! But
+                    instead of wearing the said ring and conquering the whole
+                    world, the madlad pisses on it! Hello Everyone!
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        </Grid>
+      </Box>
+
       <AppBar position="fixed" className={classes.appBar}>
         <Box
           display="flex"

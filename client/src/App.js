@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
-import { teal } from "@material-ui/core/colors";
+import SignIn from "./pages/SignIn";
 
 function App() {
   const theme = createTheme({
@@ -25,9 +25,9 @@ function App() {
               <Route exact path="/">
                 <Groups />
               </Route>
-              {/* <Route exact path="/test">
-                <JoinGroup />
-              </Route> */}
+              <Route path="/signin">
+                <SignIn />
+              </Route>
             </Switch>
           </Navbar>
         </div>

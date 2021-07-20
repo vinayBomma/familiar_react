@@ -26,6 +26,9 @@ import {
   InputLabel,
   OutlinedInput,
   InputAdornment,
+  ListItem,
+  List,
+  ListItemText,
 } from "@material-ui/core";
 import { forwardRef, useState } from "react";
 import {
@@ -36,6 +39,7 @@ import {
   PlusIcon,
   XIcon,
   DuplicateIcon,
+  ShareIcon,
 } from "@heroicons/react/outline";
 
 import Settings from "../components/Settings";
@@ -82,7 +86,8 @@ const Groups = () => {
   const [openChat, setChat] = useState(false);
   const [option, setOption] = useState(null);
   const [dialog, setDialogOpen] = useState(false);
-  const [inviteCode, setInviteCode] = useState('')
+  const [inviteCode, setInviteCode] = useState("");
+  const [groupName, setGroupName] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -130,10 +135,22 @@ const Groups = () => {
       // this.msg = "Invite code copied to clipboard";
       // this.snackbar = true;
     }
-  }
+  };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+  };
+
+  const shareGroup = () => {
+    if (navigator.share) {
+      if (groupName && inviteCode) {
+        navigator.share({
+          title: "Familiar",
+          text: `Join the ${groupName} group with the invite code ${inviteCode}`,
+          url: "https://localhost:3000/groups",
+        });
+      }
+    }
   };
 
   return (
@@ -233,28 +250,25 @@ const Groups = () => {
           <TextField
             label="Group Name"
             variant="outlined"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
             style={{ width: "100%" }}
           />
           <Box display="flex" mt={2}>
             <FormControl variant="outlined" style={{ width: "100%" }}>
-              <InputLabel>Invite Code</InputLabel>
-              <OutlinedInput readOnly
-                // type={values.showPassword ? 'text' : 'password'}
+              <OutlinedInput
+                readOnly
+                placeholder="Generate Invite Code"
                 value={inviteCode}
-                // onChange={handleChange('password')}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton onClick={copyCode}
-                      edge="end"
-                    >
+                    <IconButton onClick={copyCode} edge="end">
                       <SvgIcon>
                         <DuplicateIcon />
                       </SvgIcon>
-                      {/* {values.showPassword ? <Visibility />s : <VisibilityOff />} */}
                     </IconButton>
                   </InputAdornment>
                 }
-                // labelWidth={70}
               />
             </FormControl>
             <Box ml={1} mr={-2} alignSelf="center">
@@ -263,8 +277,23 @@ const Groups = () => {
               </Button>
             </Box>
           </Box>
+          <Box mt={1}>
+            <List>
+              <ListItem button onClick={shareGroup}>
+                <ListItemIcon>
+                  <SvgIcon>
+                    <ShareIcon />
+                  </SvgIcon>
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Share"}
+                  secondary={"Share the group with your contacts"}
+                />
+              </ListItem>
+            </List>
+          </Box>
         </DialogContent>
-        <Box mt={3}>
+        <Box mt={2}>
           <DialogActions>
             <Button onClick={handleDialogClose}>Cancel</Button>
             <Button

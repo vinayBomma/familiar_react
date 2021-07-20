@@ -1,8 +1,27 @@
-const express = require('express')
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+const { ApolloServer } = require("apollo-server");
+// const schema = require("./schema/schema");
 
-const app = express()
+const typeDefs = require("./graphql/typeDefs");
+const resolvers = require("./graphql/resolvers/index")
 
-app.listen(5000, () => {
-    console.log('Listening on 5000')
-})
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+mongoose
+  .connect(
+    "mongodb+srv://vinay:Vinay123@gqllearn.ktgdn.mongodb.net/familiar?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => {
+    console.log("Database connected");
+  });
+
+server.listen({ port: 5000 }).then((res) => {
+  console.log(`Server is running at ${res.url}`);
+});
