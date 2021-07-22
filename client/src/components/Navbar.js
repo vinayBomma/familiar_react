@@ -30,7 +30,7 @@ import {
   InformationCircleIcon,
   ChatIcon,
   CogIcon,
-  MapIcon,
+  UserIcon,
 } from "@heroicons/react/outline";
 
 const drawerWidth = 240;
@@ -40,7 +40,7 @@ const navLinks = [
   { name: "About", path: "/about", icon: InformationCircleIcon },
   { name: "Chats", path: "/chats", icon: ChatIcon },
   { name: "Settings", path: "/settings", icon: CogIcon },
-  { name: "Map", path: "/map", icon: MapIcon },
+  { name: "Sign In", path: "/signin", icon: UserIcon },
 ];
 
 const useStyles = makeStyles((theme) => ({

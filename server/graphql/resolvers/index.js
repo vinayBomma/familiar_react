@@ -32,7 +32,8 @@ module.exports = {
     },
     async getUser(_, { _id }) {
       try {
-        const user = await User.findById({ _id });
+        const user = await User.findById({ _id })
+        console.log(user)
         return user;
       } catch (err) {
         throw new Error(err);

@@ -19,7 +19,7 @@ module.exports = gql`
     email: String
     avatar: String
     batteryLevel: Int
-    groupID: String
+    group: String
   }
 
   type Query {

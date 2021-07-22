@@ -1,6 +1,20 @@
 import { Box, Button, Grid, Icon, SvgIcon } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import {isAuth} from '../app/authSlice'
+import GoogleLogin from "react-google-login";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 const SignIn = () => {
+  const history = useHistory()
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("profile"))
+    if(user){
+      history.push('/')
+    }
+  })
+
+  const dispatch = useDispatch()
   const svgIcon = (
     <Icon>
       <img
@@ -9,6 +23,14 @@ const SignIn = () => {
       />
     </Icon>
   );
+
+  const handleSuccess = (res) => {
+    dispatch(isAuth(res.profileObj))
+  };
+
+  const handleFailure = async (err) => {
+    console.log(err);
+  };
   return (
     <>
       <Box
@@ -17,9 +39,22 @@ const SignIn = () => {
         justifyContent="center"
         style={{ height: "90vh" }}
       >
-        <Button variant="contained" startIcon={svgIcon}>
-          Log in with Google
-        </Button>
+        <GoogleLogin
+          clientId="120451297244-ems52n9lvhpm9hk7cc5cr1od2gl31ue7.apps.googleusercontent.com"
+          // TODO CREATE ENV FILES FOR SECRET KEYS
+          render={(renderProps) => (
+            <Button
+              onClick={renderProps.onClick}
+              variant="contained"
+              startIcon={svgIcon}
+            >
+              Login with Google
+            </Button>
+          )}
+          onSuccess={handleSuccess}
+          onFailure={handleFailure}
+          cookiePolicy={"single_host_origin"}
+        />
       </Box>
     </>
   );

@@ -79,6 +79,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const Groups = () => {
   const classes = useStyles();
+  const authData = JSON.parse(localStorage.getItem('profile'))
+  console.log("Auth user data: ", authData)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSetting, setSetting] = useState(false);
