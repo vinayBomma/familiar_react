@@ -30,7 +30,7 @@ import {
   InformationCircleIcon,
   ChatIcon,
   CogIcon,
-  UserIcon,
+  UserCircleIcon,
 } from "@heroicons/react/outline";
 
 const drawerWidth = 240;
@@ -40,7 +40,7 @@ const navLinks = [
   { name: "About", path: "/about", icon: InformationCircleIcon },
   { name: "Chats", path: "/chats", icon: ChatIcon },
   { name: "Settings", path: "/settings", icon: CogIcon },
-  { name: "Sign In", path: "/signin", icon: UserIcon },
+  { name: "Sign In", path: "/signin", icon: UserCircleIcon },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -104,7 +104,13 @@ const Navbar = ({ children }) => {
           </IconButton>
 
           <Typography variant="h6" className={classes.pageName}>
-            {location.pathname === "/" ? "Groups" : "Chats"}
+            {location.pathname === "/"
+              ? "Groups"
+              : location.pathname === "/signin"
+              ? "Sign In"
+              : location.pathname === "/about"
+              ? "About"
+              : "Null"}
           </Typography>
 
           <section className={classes.rightToolbar}>

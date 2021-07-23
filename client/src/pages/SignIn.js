@@ -1,20 +1,20 @@
-import { Box, Button, Grid, Icon, SvgIcon } from "@material-ui/core";
+import { Box, Button, Icon } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import {isAuth} from '../app/authSlice'
+import { isAuth } from "../app/authSlice";
 import GoogleLogin from "react-google-login";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 const SignIn = () => {
-  const history = useHistory()
+  const history = useHistory();
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("profile"))
-    if(user){
-      history.push('/')
+    const user = JSON.parse(localStorage.getItem("profile"));
+    if (user) {
+      history.push("/");
     }
-  })
+  });
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const svgIcon = (
     <Icon>
       <img
@@ -25,7 +25,8 @@ const SignIn = () => {
   );
 
   const handleSuccess = (res) => {
-    dispatch(isAuth(res.profileObj))
+    dispatch(isAuth(res.profileObj));
+    history.push("/");
   };
 
   const handleFailure = async (err) => {
@@ -42,13 +43,16 @@ const SignIn = () => {
         <GoogleLogin
           clientId="120451297244-ems52n9lvhpm9hk7cc5cr1od2gl31ue7.apps.googleusercontent.com"
           // TODO CREATE ENV FILES FOR SECRET KEYS
+          // TODO Implement Logout button
+          // TODO React Router Redirect Compo
           render={(renderProps) => (
             <Button
               onClick={renderProps.onClick}
               variant="contained"
               startIcon={svgIcon}
+              style={{ textTransform: "none" }}
             >
-              Login with Google
+              Sign In with Google
             </Button>
           )}
           onSuccess={handleSuccess}
