@@ -38,8 +38,7 @@ const drawerWidth = 240;
 const navLinks = [
   { name: "Groups", path: "/", icon: UserGroupIcon },
   { name: "About", path: "/about", icon: InformationCircleIcon },
-  { name: "Chats", path: "/chats", icon: ChatIcon },
-  { name: "Settings", path: "/settings", icon: CogIcon },
+  { name: "Map", path: "/map", icon: ChatIcon },
   { name: "Sign In", path: "/signin", icon: UserCircleIcon },
 ];
 

@@ -3,6 +3,18 @@
 const Group = require("../../models/groups");
 const User = require("../../models/users");
 
+const group = async groupID => {
+  try {
+    const group = await Group.findById(groupID)
+    return {
+      ...group._doc,
+      // user: user.bind(this, group._doc.user)
+    }
+  } catch (err) {
+    throw err
+  }
+}
+
 module.exports = {
   Query: {
     async groups() {
@@ -33,8 +45,10 @@ module.exports = {
     async getUser(_, { _id }) {
       try {
         const user = await User.findById({ _id })
-        console.log(user)
-        return user;
+        return {
+          ...user._doc,
+          group: group.bind(this, user._doc.group)
+        }
       } catch (err) {
         throw new Error(err);
       }
@@ -43,30 +57,25 @@ module.exports = {
   Mutation: {
     async addUser(
       parent,
-      { displayName, uid, email, batteryLevel, groupID },
+      { displayName, uid, email, batteryLevel, group: groupId },
       context,
       info
     ) {
-      // #TODO Need to do it faster
       const newUser = User({
         displayName,
         uid,
         email,
         batteryLevel,
-        groupID,
+        group,
       });
 
       const res = await newUser.save();
+      // const groupId = await Group.findById(group)
       console.log(res);
 
       return {
         ...res._doc,
-        //   id: res._id,
-        displayName,
-        uid,
-        email,
-        batteryLevel,
-        groupID,
+        group: group.bind(this, groupId)
       };
     },
     async createGroup(parent, args, context, info) {

@@ -9,6 +9,7 @@ import {
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
 import SignIn from "./pages/SignIn";
+import Map from "./components/Map";
 
 function App() {
   const theme = createTheme({
@@ -44,6 +45,9 @@ function App() {
               </PrivateRoute>
               <Route path="/signin">
                 <SignIn />
+              </Route>
+              <Route path="/map">
+                <Map />
               </Route>
             </Switch>
           </Navbar>

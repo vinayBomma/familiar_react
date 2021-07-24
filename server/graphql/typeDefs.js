@@ -19,7 +19,7 @@ module.exports = gql`
     email: String
     avatar: String
     batteryLevel: Int
-    group: String
+    group: Group!
   }
 
   type Query {
@@ -34,7 +34,7 @@ module.exports = gql`
       uid: String!
       email: String!
       batteryLevel: Int
-      groupID: String
+      group: String
     ): User!
     createGroup(name: String, totalMembers: Int, inviteCode: String): Group!
   }
