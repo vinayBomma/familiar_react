@@ -4,9 +4,19 @@ import { isAuth } from "../app/authSlice";
 import GoogleLogin from "react-google-login";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { useMutation, gql } from "@apollo/client";
+
+const ADD_USER = gql`
+  mutation addUser($displayName: String!, $uid: String!, $avatar: String!, $email: String!, $batteryLevel: Int, $group: String) {
+    addUser(displayName: $displayName, uid: $uid, avatar: $avatar, email: $email, batteryLevel: $batteryLevel, group: $group) {
+      displayName
+    }
+  }
+`;
 
 const SignIn = () => {
   const history = useHistory();
+  const [addUser] = useMutation(ADD_USER)
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("profile"));
     if (user) {
@@ -25,6 +35,14 @@ const SignIn = () => {
   );
 
   const handleSuccess = (res) => {
+    addUser({
+      variables: {
+        displayName: res.profileObj.name,
+        avatar: res.profileObj.imageUrl,
+        email: res.profileObj.email,
+        uid: res.profileObj.googleId
+      }
+    })
     dispatch(isAuth(res.profileObj));
     history.push("/");
   };
@@ -43,8 +61,6 @@ const SignIn = () => {
         <GoogleLogin
           clientId="120451297244-ems52n9lvhpm9hk7cc5cr1od2gl31ue7.apps.googleusercontent.com"
           // TODO CREATE ENV FILES FOR SECRET KEYS
-          // TODO Implement Logout button
-          // TODO React Router Redirect Compo
           render={(renderProps) => (
             <Button
               onClick={renderProps.onClick}

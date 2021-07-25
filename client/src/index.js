@@ -4,9 +4,17 @@ import App from "./App";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+const client = new ApolloClient({
+  uri: "http://localhost:5000",
+  cache: new InMemoryCache(),
+});
+
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </Provider>,
   document.getElementById("root")
 );

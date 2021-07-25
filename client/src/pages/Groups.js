@@ -79,8 +79,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const Groups = () => {
   const classes = useStyles();
-  const authData = JSON.parse(localStorage.getItem('profile'))
-  console.log("Auth user data: ", authData)
+  const authData = JSON.parse(localStorage.getItem("profile"));
+  console.log("Auth user data: ", authData);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSetting, setSetting] = useState(false);
@@ -90,6 +90,7 @@ const Groups = () => {
   const [dialog, setDialogOpen] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
   const [groupName, setGroupName] = useState("");
+  const [toolbarTitle, setToolbarTitle] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -100,12 +101,15 @@ const Groups = () => {
     if (val === "Settings") {
       setSetting(true);
       setOption("Settings");
+      setToolbarTitle("Group Settings");
     } else if (val === "Map") {
       setMap(true);
       setOption("Map");
+      setToolbarTitle("Map");
     } else if (val === "Chat") {
       setChat(true);
       setOption("Chat");
+      setToolbarTitle("Chat");
     }
   };
 
@@ -234,7 +238,7 @@ const Groups = () => {
               </SvgIcon>
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Group Settings
+              {toolbarTitle}
             </Typography>
           </Toolbar>
         </AppBar>

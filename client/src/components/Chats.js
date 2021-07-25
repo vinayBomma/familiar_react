@@ -51,7 +51,7 @@ const Chats = () => {
       <Box display="flex" flexDirection="row" style={{ width: "100%" }}>
         <Grid item container md={6} xs={8} lg={6} sm={6}>
           <Box ml={1} mt={2} style={{ marginRight: "auto" }}>
-            <Card style={{ minWidth: "150px", backgroundColor: "#3949AB" }}>
+            <Card style={{ minWidth: "150px", backgroundColor: "#5C6BC0" }}>
               <CardContent>
                 <Typography variant="caption">Mike</Typography>
                 <span style={{ float: "right" }}>
@@ -76,7 +76,7 @@ const Chats = () => {
       <Box display="flex" flexDirection="row" style={{ width: "100%" }}>
         <Grid item container md={6} xs={8} lg={6} sm={6}>
           <Box ml={1} mt={2} style={{ marginRight: "auto" }}>
-            <Card style={{ minWidth: "150px", backgroundColor: "#3949AB" }}>
+            <Card style={{ minWidth: "150px", backgroundColor: "#5C6BC0" }}>
               <CardContent>
                 <Typography variant="caption">Mike</Typography>
                 <span style={{ float: "right" }}>
@@ -101,7 +101,7 @@ const Chats = () => {
       <Box display="flex" flexDirection="row" style={{ width: "100%" }}>
         <Grid item container md={6} xs={8} lg={6} sm={6}>
           <Box ml={1} mt={2} style={{ marginRight: "auto" }}>
-            <Card style={{ minWidth: "150px", backgroundColor: "#3949AB" }}>
+            <Card style={{ minWidth: "150px", backgroundColor: "#5C6BC0" }}>
               <CardContent>
                 <Typography variant="caption">Mike</Typography>
                 <span style={{ float: "right" }}>

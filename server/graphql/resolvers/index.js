@@ -44,7 +44,6 @@ module.exports = {
     },
     async getUser(_, { _id }) {
       try {
-        const user = await User.findById({ _id })
         return {
           ...user._doc,
           group: groupData.bind(this, user._doc.groupID)
@@ -57,7 +56,7 @@ module.exports = {
   Mutation: {
     async addUser(
       parent,
-      { displayName, uid, email, batteryLevel, group },
+      { displayName, uid, email, avatar, batteryLevel, group },
       context,
       info
     ) {
@@ -65,13 +64,16 @@ module.exports = {
         displayName,
         uid,
         email,
+        avatar,
         batteryLevel,
         groupID: group,
       });
       
-      const res = await newUser.save();
-      // const groupId = await Group.findById(group)
-      // console.log(res);
+      const res = await User.findOneAndUpdate({email: email}, {displayName, uid, avatar, batteryLevel, groupID: group}, {
+        new: true,
+        upsert: true,
+        useFindAndModify: false,
+      })
 
       return {
         ...res._doc,
