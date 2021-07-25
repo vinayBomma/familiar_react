@@ -8,7 +8,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    isAuth: (state={value: null}, action) => {
+    isAuth: (state, action) => {
     //   state.value = action.payload
     localStorage.setItem('profile', JSON.stringify({...action?.payload}))
     },
@@ -18,7 +18,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const {isAuth} = authSlice.actions;
+export const {isAuth, authLogout} = authSlice.actions;
 
 export const selectAuth = state => state.auth.value;
 

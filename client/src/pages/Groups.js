@@ -128,12 +128,12 @@ const Groups = () => {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     setInviteCode(result);
-    // this.inviteCodeSetting = result;
   };
 
   const copyCode = () => {
     if (inviteCode) {
       navigator.clipboard.writeText(inviteCode);
+      // TODO Add Snackbars
       // this.msg = "Invite code copied to clipboard";
       // this.snackbar = true;
     }
@@ -289,7 +289,7 @@ const Groups = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={"Share"}
-                  secondary={"Share the group with your contacts"}
+                  secondary={"Share group with your contacts"}
                 />
               </ListItem>
             </List>

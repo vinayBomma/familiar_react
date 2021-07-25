@@ -3,7 +3,7 @@
 const Group = require("../../models/groups");
 const User = require("../../models/users");
 
-const group = async groupID => {
+const groupData = async groupID => {
   try {
     const group = await Group.findById(groupID)
     return {
@@ -47,7 +47,7 @@ module.exports = {
         const user = await User.findById({ _id })
         return {
           ...user._doc,
-          group: group.bind(this, user._doc.group)
+          group: groupData.bind(this, user._doc.groupID)
         }
       } catch (err) {
         throw new Error(err);
@@ -57,7 +57,7 @@ module.exports = {
   Mutation: {
     async addUser(
       parent,
-      { displayName, uid, email, batteryLevel, group: groupId },
+      { displayName, uid, email, batteryLevel, group },
       context,
       info
     ) {
@@ -66,16 +66,16 @@ module.exports = {
         uid,
         email,
         batteryLevel,
-        group,
+        groupID: group,
       });
-
+      
       const res = await newUser.save();
       // const groupId = await Group.findById(group)
-      console.log(res);
+      // console.log(res);
 
       return {
         ...res._doc,
-        group: group.bind(this, groupId)
+        group: groupData.bind(this, group)
       };
     },
     async createGroup(parent, args, context, info) {

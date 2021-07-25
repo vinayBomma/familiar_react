@@ -23,14 +23,16 @@ import {
 
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import {useDispatch} from 'react-redux'
+import { authLogout } from "../app/authSlice";
 import {
   MenuIcon,
   ChevronLeftIcon,
   UserGroupIcon,
   InformationCircleIcon,
-  ChatIcon,
-  CogIcon,
+  MapIcon,
   UserCircleIcon,
+  LogoutIcon,
 } from "@heroicons/react/outline";
 
 const drawerWidth = 240;
@@ -38,7 +40,7 @@ const drawerWidth = 240;
 const navLinks = [
   { name: "Groups", path: "/", icon: UserGroupIcon },
   { name: "About", path: "/about", icon: InformationCircleIcon },
-  { name: "Map", path: "/map", icon: ChatIcon },
+  { name: "Map", path: "/map", icon: MapIcon },
   { name: "Sign In", path: "/signin", icon: UserCircleIcon },
 ];
 
@@ -74,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = ({ children }) => {
+  const dispatch = useDispatch()
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -91,6 +94,13 @@ const Navbar = ({ children }) => {
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
+
+  const handleLogout = () => {
+    dispatch(authLogout())
+    history.push('/signin')
+  }
+
+  const authData = JSON.parse(localStorage.getItem("profile"));
 
   return (
     <div>
@@ -146,11 +156,14 @@ const Navbar = ({ children }) => {
           </IconButton>
         </div>
 
-        <Avatar
-          className={classes.avatar}
-          src="https://lh3.googleusercontent.com/a-/AOh14GgSL9H-4yXSZcWrfQ3XKMBQZaqN70s6PR0mhkW8Zw=s96-c"
-          alt="Paella dish"
-        />
+        {authData && (
+          <Avatar
+            className={classes.avatar}
+            src={authData.imageUrl}
+            alt="Paella dish"
+          />
+        )}
+
         <Box mt={3}>
           <Divider />
         </Box>
@@ -169,10 +182,26 @@ const Navbar = ({ children }) => {
               </ListItemIcon>
               <ListItemText primary={link.name} />
             </ListItem>
+            // TODO Fix signin nav link when signedin, conditional nav links
           ))}
           <Box mt={2} mb={2}>
             <Divider />
           </Box>
+          {authData && (
+            <ListItem>
+              <Button onClick={handleLogout}
+                fullWidth
+                style={{ backgroundColor: "teal" }}
+                startIcon={
+                  <SvgIcon>
+                    <LogoutIcon />
+                  </SvgIcon>
+                }
+              >
+                Logout
+              </Button>
+            </ListItem>
+          )}
         </List>
       </Drawer>
       <div>
