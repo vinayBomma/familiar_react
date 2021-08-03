@@ -7,8 +7,20 @@ import { useHistory } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
 
 const ADD_USER = gql`
-  mutation addUser($displayName: String!, $uid: String!, $avatar: String!, $email: String!, $batteryLevel: Int, $group: String) {
-    addUser(displayName: $displayName, uid: $uid, avatar: $avatar, email: $email, batteryLevel: $batteryLevel, group: $group) {
+  mutation addUser(
+    $displayName: String!
+    $uid: String!
+    $avatar: String!
+    $email: String!
+    $batteryLevel: Int
+  ) {
+    addUser(
+      displayName: $displayName
+      uid: $uid
+      avatar: $avatar
+      email: $email
+      batteryLevel: $batteryLevel
+    ) {
       displayName
     }
   }
@@ -16,7 +28,7 @@ const ADD_USER = gql`
 
 const SignIn = () => {
   const history = useHistory();
-  const [addUser] = useMutation(ADD_USER)
+  const [addUser] = useMutation(ADD_USER);
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("profile"));
     if (user) {
@@ -40,9 +52,9 @@ const SignIn = () => {
         displayName: res.profileObj.name,
         avatar: res.profileObj.imageUrl,
         email: res.profileObj.email,
-        uid: res.profileObj.googleId
-      }
-    })
+        uid: res.profileObj.googleId,
+      },
+    });
     dispatch(isAuth(res.profileObj));
     history.push("/");
   };

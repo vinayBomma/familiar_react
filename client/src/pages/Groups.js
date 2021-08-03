@@ -23,14 +23,13 @@ import {
   TextField,
   Button,
   FormControl,
-  InputLabel,
   OutlinedInput,
   InputAdornment,
   ListItem,
   List,
   ListItemText,
 } from "@material-ui/core";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import {
   ChatIcon,
   CogIcon,
@@ -45,6 +44,7 @@ import {
 import Settings from "../components/Settings";
 import Chats from "../components/Chats";
 import Map from "../components/Map";
+import { useQuery, useMutation, gql } from "@apollo/client";
 
 const menuItems = [
   { name: "Map", icon: MapIcon },
@@ -77,10 +77,46 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const CREATE_GROUP = gql`
+  mutation createGroup(
+    $name: String!
+    $totalMembers: Int!
+    $inviteCode: String!
+    $members: [String]
+    $admin: [String]
+  ) {
+    createGroup(
+      name: $name
+      totalMembers: $totalMembers
+      inviteCode: $inviteCode
+      members: $members
+      admin: $admin
+    ) {
+      name
+      inviteCode
+    }
+  }
+`;
+
+const GET_USER = gql`
+  query getUser($id: String!) {
+    getUser(id: $id) {
+      _id
+      email
+    }
+  }
+`;
+
 const Groups = () => {
   const classes = useStyles();
+  const [createGroup] = useMutation(CREATE_GROUP);
   const authData = JSON.parse(localStorage.getItem("profile"));
-  console.log("Auth user data: ", authData);
+
+  // const { loading, error, data } = useQuery(GET_USER, {
+  //   variables: {
+  //     id: authData.googleId,
+  //   },
+  // });
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSetting, setSetting] = useState(false);
@@ -120,6 +156,21 @@ const Groups = () => {
       setMap(false);
     } else if (option === "Chat") {
       setChat(false);
+    }
+  };
+
+  const handleCreateGroup = () => {
+    if (groupName && inviteCode) {
+      createGroup({
+        variables: {
+          name: groupName,
+          inviteCode: inviteCode,
+          totalMembers: 1,
+          members: authData.googleId,
+          admin: authData.googleId,
+        },
+      });
+      setDialogOpen(false);
     }
   };
 
@@ -249,7 +300,11 @@ const Groups = () => {
       </Dialog>
 
       <Dialog open={dialog} onClose={handleDialogClose} fullWidth>
-        <DialogTitle style={{ textAlign: "center" }} id="alert-dialog-title">
+        <DialogTitle
+          style={{
+            textAlign: "center",
+          }}
+        >
           {"Create Group"}
         </DialogTitle>
         <DialogContent>
@@ -303,7 +358,7 @@ const Groups = () => {
           <DialogActions>
             <Button onClick={handleDialogClose}>Cancel</Button>
             <Button
-              onClick={handleDialogClose}
+              onClick={handleCreateGroup}
               color="primary"
               variant="contained"
             >

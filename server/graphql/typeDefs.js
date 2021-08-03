@@ -3,13 +3,11 @@ const { gql } = require("apollo-server");
 module.exports = gql`
   type Group {
     _id: String
-    name: String!
+    name: String
     totalMembers: Int
     inviteCode: String
-    # members: [Member]
-  }
-  type Member {
-    createdAt: String
+    members: [String]
+    admin: [String]
   }
 
   type User {
@@ -19,24 +17,32 @@ module.exports = gql`
     email: String
     avatar: String
     batteryLevel: Int
-    group: Group
+    location: [String]
   }
 
   type Query {
     groups: [Group]!
-    users: [User]
-    getGroup(_id: String): Group
-    getUser(_id: String): User
+    users: [User]!
+    getGroup(id: String): Group
+    getUser(id: String): User
   }
+
   type Mutation {
     addUser(
       displayName: String!
       uid: String!
       email: String!
       avatar: String!
+      location: [String]
       batteryLevel: Int
-      group: String
     ): User!
-    createGroup(name: String, totalMembers: Int, inviteCode: String): Group!
+
+    createGroup(
+      name: String!
+      totalMembers: Int!
+      inviteCode: String!
+      members: [String]
+      admin: [String]
+    ): Group!
   }
 `;

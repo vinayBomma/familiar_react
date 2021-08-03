@@ -7,11 +7,7 @@ const userSchema = new Schema({
   email: String,
   avatar: String,
   uid: String,
-  groupID: {
-    type: Schema.Types.ObjectId,
-    ref: "groups",
-  },
-  // location: [[Number, Number]]
+  location: [String],
 });
 
 module.exports = mongoose.model("User", userSchema);

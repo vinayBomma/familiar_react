@@ -7,6 +7,12 @@ import {
   ListItemText,
   Typography,
   SvgIcon,
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
 } from "@material-ui/core";
 import {
   ExclamationCircleIcon,
@@ -85,6 +91,8 @@ const generalControls = [
 ];
 
 const Settings = () => {
+  const [editNameDialog, setEditDialog] = useState(null);
+  const [groupName, setGroupName] = useState("");
   return (
     <>
       <Box mt={3} ml={2}>
@@ -124,6 +132,27 @@ const Settings = () => {
           </ListItem>
         ))}
       </List>
+
+      <Dialog open={editNameDialog} fullWidth>
+        <DialogTitle style={{ textAlign: "center" }}>Edit Name</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Group Name"
+            variant="outlined"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </DialogContent>
+        <Box mt={3}>
+          <DialogActions>
+            <Button>Cancel</Button>
+            <Button color="primary" variant="contained">
+              Save
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   );
 };
