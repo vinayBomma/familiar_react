@@ -1,18 +1,39 @@
 import { Box } from "@material-ui/core";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-
+import { useQuery, useMutation, gql } from "@apollo/client";
 import L from "leaflet";
+import { useState } from "react";
 
-const markerIcon = new L.Icon({
-  iconUrl:
-    "https://lh3.googleusercontent.com/a-/AOh14GgSL9H-4yXSZcWrfQ3XKMBQZaqN70s6PR0mhkW8Zw=s96-c",
-  iconSize: [40, 40],
-});
+const GET_USERS = gql`
+  query users($id: String!) {
+    users(id: $id) {
+      displayName
+      location
+      batteryLevel
+      avatar
+      _id
+    }
+  }
+`;
 
-const Map = () => {
+const Map = (id) => {
   const position = [19.0010232, 72.8397202];
+  const [iconMarker, setIconMarker] = useState(
+    "https://lh3.googleusercontent.com/a-/AOh14GgSL9H-4yXSZcWrfQ3XKMBQZaqN70s6PR0mhkW8Zw=s96-c"
+  );
+
+  const { loading, error, data } = useQuery(GET_USERS, {
+    variables: {
+      id: id.group,
+    },
+  });
+
+  const markerIcon = new L.Icon({
+    iconUrl: iconMarker,
+    iconSize: [40, 40],
+  });
+  
   return (
-    // <div style={{ height: "80vh", width: "80vh" , backgroundColor: "green" }}>
     <Box mx={6} mt={3}>
       <MapContainer
         style={{ height: "80vh" }}
@@ -21,19 +42,32 @@ const Map = () => {
         scrollWheelZoom={false}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Marker position={position} icon={markerIcon}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-        <Marker position={[19.0462548, 72.8741196]} icon={markerIcon}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          data.users.map((user) => (
+            <Marker
+              key={user._id}
+              position={[
+                user.location[user.location.length - 2],
+                user.location[user.location.length - 1],
+              ]}
+              icon={markerIcon}
+            >
+              <Popup>
+                {user.displayName}
+                <br /> Easily customizable.
+              </Popup>
+            </Marker>
+            // <Marker position={[19.0462548, 72.8741196]} icon={markerIcon}>
+            //   <Popup>
+            //     A pretty CSS3 popup. <br /> Easily customizable.
+            //   </Popup>
+            // </Marker>
+          ))
+        )}
       </MapContainer>
     </Box>
-    // </div>
   );
 };
 

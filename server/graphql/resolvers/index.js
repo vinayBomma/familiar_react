@@ -44,10 +44,12 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async users() {
+    async users(_, { id }) {
       try {
-        const user = await User.find();
-        return user;
+        const users = await User.find({
+          group: { $in: [id] },
+        });
+        return users;
       } catch (err) {
         throw new Error(err);
       }
@@ -55,28 +57,9 @@ module.exports = {
     async getGroup(_, { id }) {
       try {
         const groups = await Group.find({
-          admin: { $in: [id] },
+          members: { $in: [id] },
         });
-        return {
-          ...groups._doc,
-        };
-
-        // return {
-        //   ...groups._doc,
-        // };
-
-        // return groups.map((group) => ({
-        //   ...group._doc,
-        // }));
-        // const user = await User.findOne({ uid: id });
-        // return{
-        //   ...group._doc
-        // }
-        // return {
-        //   ...group._doc,
-        // ...user._doc
-        // user: userData.bind(this, id),
-        // };
+        return groups;
       } catch (err) {
         throw new Error(err);
       }
@@ -96,7 +79,7 @@ module.exports = {
   Mutation: {
     async addUser(
       parent,
-      { displayName, uid, email, avatar, batteryLevel, group, location },
+      { displayName, uid, email, avatar, batteryLevel },
       context,
       info
     ) {
@@ -107,8 +90,6 @@ module.exports = {
           uid,
           avatar,
           batteryLevel,
-          groupID: group,
-          $push: { location },
         },
         {
           new: true,
@@ -119,7 +100,6 @@ module.exports = {
 
       return {
         ...res._doc,
-        group: groupData.bind(this, group),
       };
     },
     async createGroup(
@@ -136,6 +116,48 @@ module.exports = {
         admin,
       });
       const res = await addGroup.save();
+
+      await User.findOneAndUpdate(
+        { uid: members },
+        { $push: { group: res._id } },
+        { new: true, upsert: true, useFindAndModify: false }
+      );
+
+      return {
+        ...res._doc,
+      };
+    },
+    async joinGroup(_, { inviteCode, members }) {
+      // const checkMember = await Group.findOne({
+      //   inviteCode,
+      // })
+
+      // TODO Implement check for member already present
+
+      const res = await Group.findOneAndUpdate(
+        { inviteCode },
+        { $push: { members }, $inc: { totalMembers: 1 } },
+        { new: true, upsert: true, useFindAndModify: false }
+      );
+
+      await User.findOneAndUpdate(
+        { uid: members },
+        { $push: { group: res._id } },
+        { new: true, upsert: true, useFindAndModify: false }
+      );
+
+      return {
+        ...res._doc,
+      };
+    },
+    async setLocation(_, { location, uid, batteryLevel }) {
+      const res = await User.findOneAndUpdate(
+        { uid },
+        { $push: { location }, batteryLevel },
+        { new: true, upsert: true, useFindAndModify: false }
+      );
+
+      // console.log(res.location[(res.location).length - 2])
 
       return {
         ...res._doc,

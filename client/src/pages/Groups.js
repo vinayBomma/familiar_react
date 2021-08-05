@@ -30,6 +30,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import { forwardRef, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   ChatIcon,
   CogIcon,
@@ -98,25 +99,40 @@ const CREATE_GROUP = gql`
   }
 `;
 
-const GET_USER = gql`
-  query getUser($id: String!) {
-    getUser(id: $id) {
+const GET_GROUP = gql`
+  query getGroup($id: String!) {
+    getGroup(id: $id) {
+      name
+      totalMembers
       _id
-      email
+    }
+  }
+`;
+
+const SET_LOCATION = gql`
+  mutation setLocation(
+    $location: [String]!
+    $uid: String!
+    $batteryLevel: Int!
+  ) {
+    setLocation(location: $location, uid: $uid, batteryLevel: $batteryLevel) {
+      location
     }
   }
 `;
 
 const Groups = () => {
   const classes = useStyles();
+  const history = useHistory();
   const [createGroup] = useMutation(CREATE_GROUP);
+  const [setLocation] = useMutation(SET_LOCATION);
   const authData = JSON.parse(localStorage.getItem("profile"));
 
-  // const { loading, error, data } = useQuery(GET_USER, {
-  //   variables: {
-  //     id: authData.googleId,
-  //   },
-  // });
+  const { loading, error, data } = useQuery(GET_GROUP, {
+    variables: {
+      id: authData.googleId,
+    },
+  });
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSetting, setSetting] = useState(false);
@@ -126,14 +142,16 @@ const Groups = () => {
   const [dialog, setDialogOpen] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
   const [groupName, setGroupName] = useState("");
+  const [groupID, setGroupID] = useState(null);
   const [toolbarTitle, setToolbarTitle] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (val) => {
+  const handleClose = (val, id) => {
     setAnchorEl(null);
+    setGroupID(id);
     if (val === "Settings") {
       setSetting(true);
       setOption("Settings");
@@ -171,6 +189,29 @@ const Groups = () => {
         },
       });
       setDialogOpen(false);
+      history.go(0);
+    }
+  };
+
+  const handleLocation = () => {
+    var batteryLevel;
+    navigator.getBattery().then((battery) => {
+      batteryLevel = Math.floor(battery.level * 100);
+    });
+    const getPosition = (position) => {
+      setLocation({
+        variables: {
+          location: [
+            `${position.coords.latitude}`,
+            `${position.coords.longitude}`,
+          ],
+          uid: authData.googleId,
+          batteryLevel,
+        },
+      });
+    };
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getPosition);
     }
   };
 
@@ -214,49 +255,56 @@ const Groups = () => {
     <>
       <Container>
         <Grid container className={classes.toolbar}>
-          <Grid item md={4} xs={12} lg={4} sm={6}>
-            <Box mt={3}>
-              <Card className={classes.cardColor}>
-                <CardHeader
-                  style={{ textAlign: "left" }}
-                  titleTypographyProps={{ variant: "h6" }}
-                  title="Dunder Mifflin"
-                  action={
-                    <IconButton onClick={handleClick}>
-                      <SvgIcon>
-                        <DotsHorizontalIcon />
-                      </SvgIcon>
-                    </IconButton>
-                  }
-                />
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={() => setAnchorEl(null)}
-                >
-                  {menuItems.map((item) => (
-                    <MenuItem
-                      button
-                      key={item.name}
-                      onClick={() => handleClose(item.name)}
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            data.getGroup.map((group) => (
+              <Grid item md={4} xs={12} lg={4} sm={6} key={group._id}>
+                <Box mt={3} mx={1}>
+                  <Card className={classes.cardColor} onClick={handleLocation}>
+                    <CardHeader
+                      style={{ textAlign: "left" }}
+                      titleTypographyProps={{ variant: "h6" }}
+                      title={group.name}
+                      action={
+                        <IconButton onClick={handleClick}>
+                          <SvgIcon>
+                            <DotsHorizontalIcon />
+                          </SvgIcon>
+                        </IconButton>
+                      }
+                    />
+                    <Menu
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={() => setAnchorEl(null)}
                     >
-                      <ListItemIcon>
-                        <SvgIcon>
-                          <item.icon />
-                        </SvgIcon>
-                      </ListItemIcon>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Menu>
-                <CardContent style={{ textAlign: "left" }}>
-                  <Typography variant="subtitle2">4 Members</Typography>
-                </CardContent>
-              </Card>
-            </Box>
-          </Grid>
+                      {menuItems.map((item) => (
+                        <MenuItem
+                          button
+                          key={item.name}
+                          onClick={() => handleClose(item.name, group._id)}
+                        >
+                          <ListItemIcon>
+                            <SvgIcon>
+                              <item.icon />
+                            </SvgIcon>
+                          </ListItemIcon>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                    <CardContent style={{ textAlign: "left" }}>
+                      <Typography variant="subtitle2">
+                        {group.totalMembers} members
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              </Grid>
+            ))
+          )}
         </Grid>
         <Fab
           className={classes.fab}
@@ -295,7 +343,7 @@ const Groups = () => {
         </AppBar>
 
         {openSetting && <Settings />}
-        {openMap && <Map />}
+        {openMap && <Map group={groupID} />}
         {openChat && <Chats />}
       </Dialog>
 

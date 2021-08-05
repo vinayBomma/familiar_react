@@ -23,8 +23,8 @@ import {
 
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import {useDispatch} from 'react-redux'
-import { authLogout } from "../app/authSlice";
+import { useDispatch } from "react-redux";
+import { authLogout, locationPermission } from "../app/authSlice";
 import {
   MenuIcon,
   ChevronLeftIcon,
@@ -33,7 +33,10 @@ import {
   MapIcon,
   UserCircleIcon,
   LogoutIcon,
+  LocationMarkerIcon,
 } from "@heroicons/react/outline";
+
+import { useMutation, gql } from "@apollo/client";
 
 const drawerWidth = 240;
 
@@ -75,14 +78,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const JOIN_GROUP = gql`
+  mutation joinGroup($inviteCode: String!, $members: [String]!) {
+    joinGroup(inviteCode: $inviteCode, members: $members) {
+      name
+      _id
+    }
+  }
+`;
+
+const SET_LOCATION = gql`
+  mutation setLocation($location: [String]!, $uid: String!, $batteryLevel: Int!) {
+    setLocation(location: $location, uid: $uid, batteryLevel: $batteryLevel) {
+      location
+    }
+  }
+`;
+
 const Navbar = ({ children }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const classes = useStyles();
+  const authData = JSON.parse(localStorage.getItem("profile"));
+  const locationData = JSON.parse(localStorage.getItem("locationAllowed"));
+  const [joinGroup] = useMutation(JOIN_GROUP);
+  const [setLocation] = useMutation(SET_LOCATION);
   const history = useHistory();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [dialog, setDialogOpen] = useState(false);
-
+  const [inviteCode, setInviteCode] = useState("");
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -96,11 +120,45 @@ const Navbar = ({ children }) => {
   };
 
   const handleLogout = () => {
-    dispatch(authLogout())
-    history.push('/signin')
+    dispatch(authLogout());
+    history.push("/signin");
+  };
+
+  const handleLocation = () => {
+    var batteryLevel;
+    navigator.getBattery().then((battery) => {
+      batteryLevel = Math.floor(battery.level * 100);
+    });
+    const getPosition = (position) => {
+      dispatch(locationPermission(true));
+      setLocation({
+        variables: {
+          location: [
+            `${position.coords.latitude}`,
+            `${position.coords.longitude}`,
+          ],
+          uid: authData.googleId,
+          batteryLevel
+        },
+      });
+    };
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getPosition);
+    }
   }
 
-  const authData = JSON.parse(localStorage.getItem("profile"));
+  const handleJoinGroup = () => {
+    if (inviteCode) {
+      joinGroup({
+        variables: {
+          inviteCode: inviteCode,
+          members: authData.googleId,
+        },
+      });
+      setDialogOpen(false);
+      history.go(0);
+    }
+  };
 
   return (
     <div>
@@ -184,12 +242,29 @@ const Navbar = ({ children }) => {
             </ListItem>
             // TODO Fix signin nav link when signedin, conditional nav links
           ))}
+          {!locationData && (
+            <ListItem>
+              <Button
+                onClick={handleLocation}
+                fullWidth
+                style={{ backgroundColor: "black" }}
+                startIcon={
+                  <SvgIcon>
+                    <LocationMarkerIcon />
+                  </SvgIcon>
+                }
+              >
+                Enable Location
+              </Button>
+            </ListItem>
+          )}
           <Box mt={2} mb={2}>
             <Divider />
           </Box>
           {authData && (
             <ListItem>
-              <Button onClick={handleLogout}
+              <Button
+                onClick={handleLogout}
                 fullWidth
                 style={{ backgroundColor: "teal" }}
                 startIcon={
@@ -219,6 +294,8 @@ const Navbar = ({ children }) => {
           <TextField
             placeholder="Enter 6 digit code"
             variant="outlined"
+            value={inviteCode}
+            onChange={(e) => setInviteCode(e.target.value)}
             style={{ width: "100%" }}
           />
         </DialogContent>
@@ -226,7 +303,7 @@ const Navbar = ({ children }) => {
           <DialogActions>
             <Button onClick={handleDialogClose}>Cancel</Button>
             <Button
-              onClick={handleDialogClose}
+              onClick={handleJoinGroup}
               color="primary"
               variant="contained"
             >

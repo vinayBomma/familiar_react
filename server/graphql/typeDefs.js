@@ -17,13 +17,14 @@ module.exports = gql`
     email: String
     avatar: String
     batteryLevel: Int
-    location: [String]
+    location: [String],
+    group: [String]
   }
 
   type Query {
     groups: [Group]!
-    users: [User]!
-    getGroup(id: String): Group
+    users(id: String): [User]!
+    getGroup(id: String): [Group]!
     getUser(id: String): User
   }
 
@@ -35,6 +36,7 @@ module.exports = gql`
       avatar: String!
       location: [String]
       batteryLevel: Int
+      group: [String]
     ): User!
 
     createGroup(
@@ -42,7 +44,18 @@ module.exports = gql`
       totalMembers: Int!
       inviteCode: String!
       members: [String]
-      admin: [String]
+      admin: [String],
     ): Group!
+
+    joinGroup(
+      inviteCode: String!,
+      members: [String]
+    ): Group!
+
+    setLocation(
+      location: [String]!
+      uid: String!
+      batteryLevel: Int!
+    ): User!
   }
 `;

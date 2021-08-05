@@ -8,6 +8,6 @@ const userSchema = new Schema({
   avatar: String,
   uid: String,
   location: [String],
+  group: [String]
 });
-
 module.exports = mongoose.model("User", userSchema);
