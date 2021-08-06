@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const dotenv = require('dotenv').config()
 const { ApolloServer } = require("apollo-server");
 // const schema = require("./schema/schema");
 
@@ -12,7 +13,7 @@ const server = new ApolloServer({
 
 mongoose
   .connect(
-    "mongodb+srv://vinay:Vinay123@gqllearn.ktgdn.mongodb.net/familiar?retryWrites=true&w=majority",
+    process.env.MONGO_URI,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
