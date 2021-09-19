@@ -72,7 +72,6 @@ const SignIn = () => {
       >
         <GoogleLogin
           clientId="120451297244-ems52n9lvhpm9hk7cc5cr1od2gl31ue7.apps.googleusercontent.com"
-          // TODO CREATE ENV FILES FOR SECRET KEYS
           render={(renderProps) => (
             <Button
               onClick={renderProps.onClick}

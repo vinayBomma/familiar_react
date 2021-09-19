@@ -152,6 +152,7 @@ const Groups = () => {
   const handleClose = (val, id) => {
     setAnchorEl(null);
     setGroupID(id);
+    console.log(id)
     if (val === "Settings") {
       setSetting(true);
       setOption("Settings");
@@ -284,7 +285,7 @@ const Groups = () => {
                         <MenuItem
                           button
                           key={item.name}
-                          onClick={() => handleClose(item.name, group._id)}
+                          onClick={() => handleClose(item.name, group.name)}
                         >
                           <ListItemIcon>
                             <SvgIcon>

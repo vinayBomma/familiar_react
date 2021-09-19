@@ -16,15 +16,16 @@ const GET_USERS = gql`
   }
 `;
 
-const Map = (id) => {
+const Map = (groupID) => {
   const position = [19.0010232, 72.8397202];
+  console.log(groupID)
   const [iconMarker, setIconMarker] = useState(
     "https://lh3.googleusercontent.com/a-/AOh14GgSL9H-4yXSZcWrfQ3XKMBQZaqN70s6PR0mhkW8Zw=s96-c"
   );
 
   const { loading, error, data } = useQuery(GET_USERS, {
     variables: {
-      id: id.group,
+      id: groupID.group,
     },
   });
 
@@ -32,6 +33,8 @@ const Map = (id) => {
     iconUrl: iconMarker,
     iconSize: [40, 40],
   });
+
+  console.log(data)
   
   return (
     <Box mx={6} mt={3}>
@@ -52,11 +55,12 @@ const Map = (id) => {
                 user.location[user.location.length - 2],
                 user.location[user.location.length - 1],
               ]}
+              position={position}
               icon={markerIcon}
             >
               <Popup>
-                {user.displayName}
-                <br /> Easily customizable.
+                {user.batteryLevel}
+                <br /> {user.displayName}
               </Popup>
             </Marker>
             // <Marker position={[19.0462548, 72.8741196]} icon={markerIcon}>
